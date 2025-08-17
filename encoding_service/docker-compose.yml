@@ -1,0 +1,48 @@
+version: '3.13'
+
+services:
+  fastapi:
+    container_name: fastapi
+    build: ./fastapi_app
+    ports:
+      - 8005:8000
+    depends_on:
+      - triton
+    environment:
+      - TRITON_SERVER_URL=triton:8001
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+              count: 1
+
+  triton:
+    container_name: triton
+    image: nvcr.io/nvidia/tritonserver:24.09-py3
+    ports:
+      - 8000:8000
+      - 8001:8001
+    restart: always
+    volumes:
+      - ./triton/models_repository
+    command: ["tritonserver", "--model-store=/models"]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+              count: 1
+
+  trtexec:
+    container_name: trtexec
+    image: nvcr.io/nvidia/tensorrt:24.09-py3
+    volumes:
+      - ./trtexec_workspace:/workspace
+    command: ["tail", "-f", "/dev/null"]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+              count: 1
