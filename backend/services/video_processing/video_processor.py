@@ -6,7 +6,6 @@ from backend.global_config import (
     TARGET_FORMAT_NOTE,
     MS_IN_SECOND,
     OUTPUT_FRAMES_DIR,
-
 )
 from backend.logger import get_logger
 
