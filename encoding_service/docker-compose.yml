@@ -2,8 +2,8 @@ version: '3.13'
 
 services:
   fastapi:
-    container_name: fastapi
-    build: ./fastapi_app
+    container_name: encoding_service
+    build: .
     ports:
       - 8005:8000
     depends_on:
