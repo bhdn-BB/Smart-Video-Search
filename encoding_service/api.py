@@ -16,7 +16,6 @@ async def predict_image(file: UploadFile = File(..., description="Image input"))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
 
-
 @app.post("/encoding/text", description="Text encoding")
 async def predict_text(text: str = Query(..., description="Text input")):
     try:
