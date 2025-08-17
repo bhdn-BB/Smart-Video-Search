@@ -1,6 +1,6 @@
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).parent
 
 OUTPUT_FRAMES_DIR = BASE_DIR / 'frames'
 
