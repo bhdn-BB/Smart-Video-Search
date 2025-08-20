@@ -1,0 +1,21 @@
+name: "encoder_image"
+platform: "onnxruntime_onnx"
+max_batch_size: 128
+input [
+  {
+    name: "pixel_values"
+    data_type: TYPE_FP32
+    format: FORMAT_NCHW
+    dims: [3, 224, 224]
+  }
+]
+output [
+  {
+    name: "image_features"
+    data_type: TYPE_FP32
+    dims: [-1]
+  }
+]
+dynamic_batching {
+  preferred_batch_size: [4, 8, 16, 32, 64, 128]
+}
