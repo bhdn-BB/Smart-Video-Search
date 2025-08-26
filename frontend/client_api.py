@@ -1,14 +1,23 @@
+from pathlib import Path
+
 import streamlit as st
 import requests
+import yaml
 
-# Константи
+BASE_DIR = Path().parent.absolute()
+
+with open(BASE_DIR / "app_config.yaml", "r") as stream:
+    config = yaml.safe_load(stream)
+
 MIN_LINKS = 1
 MAX_LINKS = 5
 DEFAULT_LINKS = 1
 LINK_STEP = 1
 PROMPT_HEIGHT = 150
 
-st.title("Smart Video Search")
+BACKEND_URL = f'http://localhost:{config['backend']['host']}/{config['backend']['port']}'
+
+st.title(config['backend']['port'])
 
 if "links" not in st.session_state:
     st.session_state.links = [""] * DEFAULT_LINKS
@@ -62,7 +71,7 @@ if st.button("Start"):
             "prompt": prompt
         }
         try:
-            response = requests.post("http://localhost:5000/process", json=payload)
+            response = requests.post(BACKEND_URL, json=payload)
             response.raise_for_status()
             data = response.json()
             st.success("Data sent successfully!")
