@@ -1,13 +1,5 @@
-from pathlib import Path
-
 import streamlit as st
 import requests
-import yaml
-
-BASE_DIR = Path().parent.absolute()
-
-with open(BASE_DIR / "app_config.yaml", "r") as stream:
-    config = yaml.safe_load(stream)
 
 MIN_LINKS = 1
 MAX_LINKS = 5
@@ -15,9 +7,10 @@ DEFAULT_LINKS = 1
 LINK_STEP = 1
 PROMPT_HEIGHT = 150
 
-BACKEND_URL = f'http://localhost:{config['backend']['host']}/{config['backend']['port']}'
+BACKEND_PORT = 5002
+BACKEND_URL = f'http://localhost:{BACKEND_PORT}'
 
-st.title(config['backend']['port'])
+st.title('Smart Video Search')
 
 if "links" not in st.session_state:
     st.session_state.links = [""] * DEFAULT_LINKS
