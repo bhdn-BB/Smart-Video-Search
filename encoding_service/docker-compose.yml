@@ -1,15 +1,15 @@
-version: '3.13'
-
 services:
-  fastapi:
-    container_name: encoding_service
-    build: .
-    ports:
-      - 8005:8000
-    depends_on:
-      - triton
-    environment:
-      - TRITON_SERVER_URL=triton:8001
+  trtexec_container:
+    container_name: trtexec_container
+    image: nvcr.io/nvidia/tensorrt:24.09-py3
+    volumes:
+      - ./trtexec_workspace:/workspace
+      - ./triton/models:/models
+    command: >
+      /bin/bash -c "
+      trtexec --onnx=/workspace/model1.onnx --saveEngine=/models/model1/1/model.plan --fp16 &&
+      trtexec --onnx=/workspace/model2.onnx --saveEngine=/models/model2/1/model.plan --fp16
+      "
     deploy:
       resources:
         reservations:
@@ -23,23 +23,13 @@ services:
     ports:
       - 8000:8000
       - 8001:8001
+      - 8002:8002
     restart: always
     volumes:
-      - ./triton/models_repository
-    command: ["tritonserver", "--model-store=/models"]
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - capabilities: [gpu]
-              count: 1
-
-  trtexec:
-    container_name: trtexec
-    image: nvcr.io/nvidia/tensorrt:24.09-py3
-    volumes:
-      - ./trtexec_workspace:/workspace
-    command: ["tail", "-f", "/dev/null"]
+      - ./triton/models:/models
+    command: ["tritonserver", "--model-store=/models", "--log-verbose=1"]
+    depends_on:
+      - trtexec_container
     deploy:
       resources:
         reservations:

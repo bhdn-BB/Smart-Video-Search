@@ -1,7 +1,16 @@
+from pathlib import Path
+
 from fastapi import FastAPI, File, UploadFile, Query, HTTPException
 import base64
 from triton.inference_module import InferenceModule
 from encoding_service.src.models.clip_openai.config import MODEL_CLIP
+
+import yaml
+
+BASE_DIR = Path().parent.absolute()
+
+with open(BASE_DIR / "app_config.yaml", "r") as stream:
+    config = yaml.safe_load(stream)
 
 app = FastAPI()
 inference_module = InferenceModule()

@@ -5,7 +5,6 @@ import yt_dlp as youtube_dl
 from pydantic import HttpUrl
 from backend.global_config import (
     TARGET_FORMAT_NOTE,
-    MS_IN_SECOND,
     OUTPUT_FRAMES_DIR,
     QUALITY_INTERVAL_MAP,
     QUALITY_FRAMES,
