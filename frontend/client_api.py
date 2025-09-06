@@ -3,9 +3,12 @@ import requests
 
 MIN_LINKS = 1
 MAX_LINKS = 5
-DEFAULT_LINKS = 1
-LINK_STEP = 1
+DEFAULT_VALUE = 1
+STEP_VALUE = 1
 PROMPT_HEIGHT = 150
+
+MIN_K = 1
+MAX_K = 5
 
 BACKEND_PORT = 5002
 BACKEND_URL = f'http://localhost:{BACKEND_PORT}'
@@ -13,18 +16,27 @@ BACKEND_URL = f'http://localhost:{BACKEND_PORT}'
 st.title('Smart Video Search')
 
 if "links" not in st.session_state:
-    st.session_state.links = [""] * DEFAULT_LINKS
+    st.session_state.links = [""] * DEFAULT_VALUE
 
 if "show_expander" not in st.session_state:
     st.session_state.show_expander = False
+
+top_k = st.number_input(
+    "Enter the number of fragments",
+    min_value=MIN_LINKS,
+    max_value=MAX_LINKS,
+    step=STEP_VALUE,
+    value=DEFAULT_VALUE,
+    key='num_fragments',
+)
 
 num_links = st.number_input(
     "Enter the number of links:",
     min_value=MIN_LINKS,
     max_value=MAX_LINKS,
-    step=LINK_STEP,
+    step=STEP_VALUE,
     value=len(st.session_state.links),
-    key="num_input"
+    key="num_links"
 )
 
 if st.button("Open/Edit Links"):
@@ -61,7 +73,8 @@ if st.button("Start"):
     else:
         payload = {
             "links": st.session_state.links,
-            "prompt": prompt
+            "prompt": prompt,
+            'top_k': top_k,
         }
         try:
             response = requests.post(BACKEND_URL, json=payload)
