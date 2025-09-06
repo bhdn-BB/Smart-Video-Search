@@ -1,28 +1,10 @@
-from pathlib import Path
-
-from fastapi import FastAPI, UploadFile, File, BackgroundTasks
-from pydantic import BaseModel
+from fastapi import FastAPI, UploadFile, File
 from typing import List
 import aiohttp
 import asyncio
-
+from global_config import ENCODING_SERVICE_URL
+from routers import text_encoding
 app = FastAPI(title="Encoding Service API")
-
-ENCODING_SERVICE_URL = "http://localhost:8001/encode"  # приклад сервісу енкодингу
-
-# ------------------------------
-# 1. Асинхронна передача промпту
-# ------------------------------
-class PromptRequest(BaseModel):
-    prompt: str
-
-@app.post("/send_prompt")
-async def send_prompt(request: PromptRequest):
-    async with aiohttp.ClientSession() as session:
-        async with session.post(ENCODING_SERVICE_URL, json={"prompt": request.prompt}) as resp:
-            data = await resp.json()
-    return {"status": "ok", "response": data}
-
 
 # ------------------------------
 # 2. Передача списку фотографій
@@ -69,6 +51,6 @@ async def collect_results():
     UPLOAD_QUEUE.clear()
     return {"status": "ok", "results": results}
 
-
+app.include_router(text_encoding.router)
 
 
