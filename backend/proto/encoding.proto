@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package encoding;
+
+service EncodingService {
+  rpc EncodeText (QueryRequest) returns (QueryResponse);
+  rpc EncodeImages (ImagesRequest) returns (ImagesResponse);
+}
+
+message QueryRequest {
+  string query = 1;
+}
+
+message QueryResponse {
+  repeated float embedding = 1;
+}
+
+message ImagesRequest {
+  repeated bytes images = 1;
+}
+
+message ImagesResponse {
+  repeated ImageEmbedding embeddings = 1;
+}
+
+message ImageEmbedding {
+  repeated float embedding = 1;
+}
