@@ -1,5 +1,9 @@
-from pydantic import BaseModel
+from typing import List
+from pydantic import BaseModel, Field
 
 
 class QueryResponse(BaseModel):
-    embedding: list
+    embedding: List[float] = Field(
+        ...,
+        description="Text embedding response"
+    )
