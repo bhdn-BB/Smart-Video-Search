@@ -3,4 +3,8 @@ from backend.global_config import MAX_LENGTH_QUERY
 
 
 class QueryRequest(BaseModel):
-    query: str = Field(..., max_length=MAX_LENGTH_QUERY)
+    query: str = Field(
+        ...,
+        max_length=MAX_LENGTH_QUERY,
+        description="Query request",
+    )
